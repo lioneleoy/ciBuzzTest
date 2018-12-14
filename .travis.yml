@@ -10,4 +10,8 @@ branches:
   only:
     - master
 after_success:
-  - sh .travis/deploy_dockerhub.sh
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker build -f Dockerfile -t $TRAVIS_REPO_SLUG:$TAG .
+    docker push cinhtau/elasticsearch;
+    fi
